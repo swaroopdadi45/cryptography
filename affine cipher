@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+int modInverse(int a, int m) {
+    a = a % m;
+    int x;
+    for (x = 1; x < m; x++) {
+        if ((a * x) % m == 1) {
+            return x;
+        }
+    }
+    return -1;
+}
+
+int main() {
+    // Known information
+    char mostFrequent = 'B';
+    char secondMostFrequent = 'U';
+    int m = 26;  // Size of the alphabet
+
+    // Convert characters to their corresponding numerical values
+    int mostFrequentValue = mostFrequent - 'A';
+    int secondMostFrequentValue = secondMostFrequent - 'A';
+
+    // Find a^-1 (mod m)
+    int a = (secondMostFrequentValue - mostFrequentValue + m) % m;
+    int aInverse = modInverse(a, m);
+
+    // Find b using the formula b = (y - ax) mod m, where y is the known encryption
+    int b = (mostFrequentValue - a * 1 + m) % m;
+
+    printf("Affine cipher parameters:\n");
+    printf("a: %d\n", a);
+    printf("a^-1 (mod m): %d\n", aInverse);
+    printf("b: %d\n", b);
+
+    return 0;
+}
