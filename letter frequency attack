@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <string.h>
+
+// Function to perform a letter frequency attack on an additive cipher
+void letterFrequencyAttack(char ciphertext[], int key, int numPlaintexts) {
+    int i, j;
+    char plaintext[1000];
+    int frequencies[26] = {0};
+
+    // Calculate letter frequencies in the ciphertext
+    for (i = 0; i < strlen(ciphertext); i++) {
+        char c = ciphertext[i];
+        if (c >= 'A' && c <= 'Z') {
+            frequencies[c - 'A']++;
+        } else if (c >= 'a' && c <= 'z') {
+            frequencies[c - 'a']++;
+        }
+    }
+
+    // Find the most likely key by comparing letter frequencies
+    int maxFreqIndex = 0;
+    for (i = 1; i < 26; i++) {
+        if (frequencies[i] > frequencies[maxFreqIndex]) {
+            maxFreqIndex = i;
+        }
+    }
+
+    // Calculate the key
+    key = (maxFreqIndex + 26 - ('E' - 'A')) % 26;
+
+    // Display the top numPlaintexts possible plaintexts
+    printf("Top %d possible plaintexts:\n", numPlaintexts);
+    for (j = 0; j < numPlaintexts; j++) {
+        for (i = 0; i < strlen(ciphertext); i++) {
+            char c = ciphertext[i];
+            if (c >= 'A' && c <= 'Z') {
+                plaintext[i] = 'A' + (c - 'A' - key + 26) % 26;
+            } else if (c >= 'a' && c <= 'z') {
+                plaintext[i] = 'a' + (c - 'a' - key + 26) % 26;
+            } else {
+                plaintext[i] = c;
+            }
+        }
+        plaintext[i] = '\0';
+
+        printf("Key %d: %s\n", key, plaintext);
+
+        // Update the key for the next iteration
+        key = (key + 1) % 26;
+    }
+}
+
+int main() {
+    char ciphertext[1000];
+    int key, numPlaintexts;
+
+    // Get the ciphertext from the user
+    printf("Enter the ciphertext: ");
+    fgets(ciphertext, sizeof(ciphertext), stdin);
+
+    // Get the number of possible plaintexts to display
+    printf("Enter the number of possible plaintexts to display: ");
+    scanf("%d", &numPlaintexts);
+
+    // Initialize key to 0
+    key = 0;
+
+    // Perform the letter frequency attack
+    letterFrequencyAttack(ciphertext, key, numPlaintexts);
+
+    return 0;
+}
