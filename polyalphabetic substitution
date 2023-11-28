@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+// Function to perform polyalphabetic substitution cipher
+void polyalphabeticCipher(char *plaintext, char *key) {
+    int i, j;
+    int keyLength = strlen(key);
+    int textLength = strlen(plaintext);
+
+    for (i = 0; i < textLength; i++) {
+        if (isalpha(plaintext[i])) {
+            char baseChar = isupper(plaintext[i]) ? 'A' : 'a';
+            int offset = tolower(key[i % keyLength]) - 'a';
+
+            // Apply monoalphabetic substitution
+            plaintext[i] = ((plaintext[i] - baseChar + offset) % 26) + baseChar;
+        }
+    }
+}
+
+int main() {
+    char plaintext[1000];
+    char key[100];
+
+    // Input plaintext and key
+    printf("Enter the plaintext: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+    printf("Enter the key: ");
+    fgets(key, sizeof(key), stdin);
+
+    // Remove newline characters from input
+    strtok(plaintext, "\n");
+    strtok(key, "\n");
+
+    // Perform polyalphabetic substitution cipher
+    polyalphabeticCipher(plaintext, key);
+
+    // Display the encrypted text
+    printf("Encrypted Text: %s\n", plaintext);
+
+    return 0;
+}
