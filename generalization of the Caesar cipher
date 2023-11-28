@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+int isCoprime(int a, int m) {
+    return gcd(a, m) == 1;
+}
+
+int main() {
+    int m = 26; // Size of the alphabet
+
+    printf("Allowed values of 'a' in the affine Caesar cipher:\n");
+
+    int a;
+    for (a = 1; a < m; a++) {
+        if (isCoprime(a, m)) {
+            printf("%d ", a);
+        }
+    }
+
+    printf("\n");
+
+    return 0;
+}
