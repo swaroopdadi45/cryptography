@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+// Size of the alphabet
+#define ALPHABET_SIZE 26
+
+// Function to encrypt a 2x2 matrix Hill cipher
+void encrypt(int key[2][2], char *plaintext) {
+    int len = strlen(plaintext);
+    int i, j;
+    
+    // Ensure the length of the plaintext is even
+    if (len % 2 != 0) {
+        printf("Error: Length of plaintext must be even for 2x2 Hill cipher.\n");
+        return;
+    }
+
+    // Loop through the plaintext in pairs
+    for (i = 0; i < len; i += 2) {
+        // Convert pairs to numerical values
+        int p1 = plaintext[i] - 'a';
+        int p2 = plaintext[i + 1] - 'a';
+
+        // Apply the key matrix multiplication
+        int c1 = (key[0][0] * p1 + key[0][1] * p2) % ALPHABET_SIZE;
+        int c2 = (key[1][0] * p1 + key[1][1] * p2) % ALPHABET_SIZE;
+
+        // Print the result as uppercase letters
+        printf("%c%c", c1 + 'A', c2 + 'A');
+    }
+
+    printf("\n");
+}
+
+// Function to calculate the modular inverse of a number
+int modInverse(int a, int m) {
+    int i;
+    for (i = 1; i < m; i++) {
+        if ((a * i) % m == 1) {
+            return i;
+        }
+    }
+    return -1;  // Inverse doesn't exist
+}
+
+// Function to decrypt a 2x2 matrix Hill cipher
+void decrypt(int key[2][2], char *ciphertext) {
+    int len = strlen(ciphertext);
+    int i, j;
+
+    // Ensure the length of the ciphertext is even
+    if (len % 2 != 0) {
+        printf("Error: Length of ciphertext must be even for 2x2 Hill cipher.\n");
+        return;
+    }
+
+    // Calculate the modular inverse of the determinant of the key matrix
+    int det = (key[0][0] * key[1][1] - key[0][1] * key[1][0] + ALPHABET_SIZE) % ALPHABET_SIZE;
+    int detInverse = modInverse(det, ALPHABET_SIZE);
+
+    if (detInverse == -1) {
+        printf("Error: Modular inverse does not exist.\n");
+        return;
+    }
+
+    // Calculate the adjugate of the key matrix
+    int keyAdj[2][2] = {
+        {key[1][1], -key[0][1]},
+        {-key[1][0], key[0][0]}
+    };
+
+    // Apply the modular inverse to the adjugate
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 2; j++) {
+            keyAdj[i][j] = (keyAdj[i][j] * detInverse + ALPHABET_SIZE) % ALPHABET_SIZE;
+        }
+    }
+
+    // Loop through the ciphertext in pairs
+    for (i = 0; i < len; i += 2) {
+        // Convert pairs to numerical values
+        int c1 = ciphertext[i] - 'A';
+        int c2 = ciphertext[i + 1] - 'A';
+
+        // Apply the key matrix multiplication
+        int p1 = (keyAdj[0][0] * c1 + keyAdj[0][1] * c2) % ALPHABET_SIZE;
+        int p2 = (keyAdj[1][0] * c1 + keyAdj[1][1] * c2) % ALPHABET_SIZE;
+
+        // Print the result as lowercase letters
+        printf("%c%c", p1 + 'a', p2 + 'a');
+    }
+
+    printf("\n");
+}
+
+int main() {
+    // Key matrix
+    int key[2][2] = {
+        {9, 4},
+        {5, 7}
+    };
+
+    // Plaintext
+    char plaintext[] = "meet me at the usual place at ten rather than eight oclock";
+
+    // Encryption
+    printf("Encrypted Text: ");
+    encrypt(key, plaintext);
+
+    // Ciphertext
+    char ciphertext[] = "PDHNSZIDFSIKXWWBOKVQKQTYD";
+    
+    // Decryption
+    printf("Decrypted Text: ");
+    decrypt(key, ciphertext);
+
+    return 0;
+}
