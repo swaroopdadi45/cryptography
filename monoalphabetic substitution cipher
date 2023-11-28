@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <string.h>
+
+// Function to perform monoalphabetic substitution encryption
+void monoalphabeticEncrypt(char *plaintext, char *key) {
+    int i;
+    for (i = 0; i < strlen(plaintext); i++) {
+        // Check if the character is a letter
+        if (isalpha(plaintext[i])) {
+            // Determine whether the letter is uppercase or lowercase
+            char base = isupper(plaintext[i]) ? 'A' : 'a';
+
+            // Apply the monoalphabetic substitution encryption
+            plaintext[i] = key[plaintext[i] - base];
+        }
+    }
+}
+
+int main() {
+    // Given plaintext
+    char plaintext[100];  // Assuming a maximum input length of 100 characters
+    printf("Enter the plaintext: ");
+    scanf("%99[^\n]", plaintext);  // Read up to 99 characters until newline
+
+    // Given key for monoalphabetic substitution
+    char key[] = "ZYXWVUTSRQPONMLKJIHGFEDCBAzyxwvutsrqponmlkjihgfedcba";
+
+    // Encrypt the plaintext using monoalphabetic substitution
+    monoalphabeticEncrypt(plaintext, key);
+
+    // Print the encrypted text
+    printf("Encrypted Text: %s\n", plaintext);
+
+    return 0;
+}
