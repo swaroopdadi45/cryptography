@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <math.h>
+
+// Function to calculate (base^exponent) % modulus
+long long power(long long base, long long exponent, long long modulus) {
+    long long result = 1;
+    base = base % modulus;
+
+    while (exponent > 0) {
+        if (exponent % 2 == 1) {
+            result = (result * base) % modulus;
+        }
+
+        exponent = exponent >> 1; // Equivalent to exponent /= 2
+        base = (base * base) % modulus;
+    }
+
+    return result;
+}
+
+// Function to perform Diffie-Hellman key exchange
+long long diffieHellman(long long base, long long private_key, long long modulus) {
+    return power(base, private_key, modulus);
+}
+
+int main() {
+    long long base = 2; // Public base
+    long long modulus = 23; // Public modulus
+    long long private_key_A = 6; // Alice's private key
+    long long private_key_B = 15; // Bob's private key
+
+    // Calculate public values exchanged between Alice and Bob
+    long long public_value_A = diffieHellman(base, private_key_A, modulus);
+    long long public_value_B = diffieHellman(base, private_key_B, modulus);
+
+    // Calculate the shared secret key for both Alice and Bob
+    long long secret_key_A = diffieHellman(public_value_B, private_key_A, modulus);
+    long long secret_key_B = diffieHellman(public_value_A, private_key_B, modulus);
+
+    // Display the public values and shared secret keys
+    printf("Public value sent by Alice: %lld\n", public_value_A);
+    printf("Public value sent by Bob: %lld\n", public_value_B);
+    printf("Shared secret key for Alice: %lld\n", secret_key_A);
+    printf("Shared secret key for Bob: %lld\n", secret_key_B);
+
+    return 0;
+}
