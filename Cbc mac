@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+
+// Function to perform CBC-MAC calculation
+void cbcMac(uint8_t *key, uint8_t *message, int block_size) {
+    uint8_t iv[block_size]; // Initialization vector
+    uint8_t xor_result[block_size]; // Result of XOR operation
+
+    // Initialize IV with zeros
+    for (int i = 0; i < block_size; i++) {
+        iv[i] = 0x00;
+    }
+
+    // Perform CBC-MAC calculation for one-block message 'X'
+    for (int i = 0; i < block_size; i++) {
+        iv[i] ^= message[i]; // XOR the message with IV
+        // Simulating block cipher operation (not implemented here)
+    }
+
+    printf("CBC-MAC for one-block message 'X':\n");
+    printf("T = ");
+    for (int i = 0; i < block_size; i++) {
+        printf("%02X ", iv[i]);
+    }
+    printf("\n");
+
+    // Simulating adversary's knowledge of T
+    uint8_t T[block_size];
+    memcpy(T, iv, block_size);
+
+    // Create a two-block message X || (X ⊕ T)
+    uint8_t two_block_message[block_size * 2];
+    memcpy(two_block_message, message, block_size); // X
+    for (int i = 0; i < block_size; i++) {
+        two_block_message[block_size + i] = message[i] ^ T[i]; // (X ⊕ T)
+    }
+
+    // Perform CBC-MAC calculation for the two-block message
+    for (int i = 0; i < block_size * 2; i += block_size) {
+        for (int j = 0; j < block_size; j++) {
+            iv[j] ^= two_block_message[i + j]; // XOR the message with IV
+            // Simulating block cipher operation (not implemented here)
+        }
+    }
+
+    printf("\nCBC-MAC for two-block message 'X || (X ⊕ T)':\n");
+    printf("T' = ");
+    for (int i = 0; i < block_size; i++) {
+        printf("%02X ", iv[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    uint8_t key[] = {0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6}; // Example key
