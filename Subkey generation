@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdint.h>
+
+// Function to perform left shift on a byte array
+void leftShift(uint8_t *block, int len) {
+    int i;
+    uint8_t overflow = 0;
+
+    for (i = 0; i < len; i++) {
+        uint8_t current = block[i];
+        block[i] = (current << 1) | overflow;
+        overflow = (current & 0x80) ? 1 : 0; // Store the overflow bit
+    }
+}
+
+// Function to print the subkeys
+void printSubkeys(uint8_t *subkey1, uint8_t *subkey2, int size) {
+    printf("Subkey 1: ");
+    for (int i = 0; i < size; i++) {
+        printf("%02X ", subkey1[i]);
+    }
+    printf("\n");
+
+    printf("Subkey 2: ");
+    for (int i = 0; i < size; i++) {
+        printf("%02X ", subkey2[i]);
+    }
+    printf("\n");
+}
+
+// Function to generate CMAC subkeys
+void generateCMACSubkeys(int blockSize) {
+    uint8_t block[blockSize];
+    uint8_t subkey1[blockSize];
+    uint8_t subkey2[blockSize];
+
+    // Initialize block with all 0 bits
+    for (int i = 0; i < blockSize; i++) {
+        block[i] = 0x00;
+    }
+
+    // Apply block cipher to the block consisting entirely of 0 bits (not implemented here)
+
+    // Perform left shift on the block to generate subkey 1
+    leftShift(block, blockSize);
+
+    // Determine constants for left shift and XOR based on block size
+    uint8_t constant = (blockSize == 64) ? 0x87 : 0x1B;
+
+    // XOR with constant if necessary
+    if (block[0] & 0x80) {
+        block[blockSize - 1] ^= constant;
+    }
+
+    // Copy the modified block to subkey 1
+    for (int i = 0; i < blockSize; i++) {
+        subkey1[i] = block[i];
+    }
+
+    // Perform left shift on subkey 1 to generate subkey 2
+    leftShift(subkey1, blockSize);
+
+    // Determine constants for left shift and XOR for subkey 2
+    constant = (blockSize == 64) ? 0x87 : 0x1B;
+
+    // XOR with constant if necessary
+    if (subkey1[0] & 0x80
