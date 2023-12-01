@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Function to perform ECB encryption
+void ecbEncrypt(char *plaintext, int block_size) {
+    // Perform ECB encryption (implementation not provided)
+    printf("ECB Encryption: Encrypting '%s' with block size %d\n", plaintext, block_size);
+    // Simulated encryption result
+    printf("ECB Encrypted Text: Encrypted_text_block_1 Encrypted_text_block_2 ...\n");
+}
+
+// Function to perform ECB decryption
+void ecbDecrypt(char *ciphertext, int block_size) {
+    // Perform ECB decryption (implementation not provided)
+    printf("ECB Decryption: Decrypting '%s' with block size %d\n", ciphertext, block_size);
+    // Simulated decryption result
+    printf("ECB Decrypted Text: Decrypted_text_block_1 Decrypted_text_block_2 ...\n");
+}
+
+// Function to perform CBC encryption
+void cbcEncrypt(char *plaintext, int block_size) {
+    // Perform CBC encryption (implementation not provided)
+    printf("CBC Encryption: Encrypting '%s' with block size %d\n", plaintext, block_size);
+    // Simulated encryption result
+    printf("CBC Encrypted Text: Encrypted_text_block_1 Encrypted_text_block_2 ...\n");
+}
+
+// Function to perform CBC decryption
+void cbcDecrypt(char *ciphertext, int block_size) {
+    // Perform CBC decryption (implementation not provided)
+    printf("CBC Decryption: Decrypting '%s' with block size %d\n", ciphertext, block_size);
+    // Simulated decryption result
+    printf("CBC Decrypted Text: Decrypted_text_block_1 Decrypted_text_block_2 ...\n");
+}
+
+// Function to perform CFB encryption
+void cfbEncrypt(char *plaintext, int block_size) {
+    // Perform CFB encryption (implementation not provided)
+    printf("CFB Encryption: Encrypting '%s' with block size %d\n", plaintext, block_size);
+    // Simulated encryption result
+    printf("CFB Encrypted Text: Encrypted_text_block_1 Encrypted_text_block_2 ...\n");
+}
+
+// Function to perform CFB decryption
+void cfbDecrypt(char *ciphertext, int block_size) {
+    // Perform CFB decryption (implementation not provided)
+    printf("CFB Decryption: Decrypting '%s' with block size %d\n", ciphertext, block_size);
+    // Simulated decryption result
+    printf("CFB Decrypted Text: Decrypted_text_block_1 Decrypted_text_block_2 ...\n");
+}
+
+int main() {
+    int block_size = 8; // Block size in bytes (for example, 64 bits)
+    char plaintext[] = "This is a plaintext message."; // Example plaintext
+
+    // Padding the plaintext to ensure it is a multiple of block size (if needed)
+    int plaintext_len = strlen(plaintext);
+    int extra_bytes = block_size - (plaintext_len % block_size);
+    if (extra_bytes != block_size) {
+        // Add padding according to the description
+        plaintext[plaintext_len] = '\x80'; // '1' bit followed by zeros (if needed)
+        for (int i = plaintext_len + 1; i < plaintext_len + extra_bytes; ++i) {
+            plaintext[i] = '\x00'; // Adding zero bits to complete the block
+        }
+        plaintext[plaintext_len + extra_bytes] = '\0'; // Null-terminate the string
+    }
+
+    // Encrypt and Decrypt using ECB, CBC, and CFB modes
+    ecbEncrypt(plaintext, block_size);
+    ecbDecrypt("Encrypted_text_block_1 Encrypted_text_block_2 ...", block_size);
+
+    cbcEncrypt(plaintext, block_size);
+    cbcDecrypt("Encrypted_text_block_1 Encrypted_text_block_2 ...", block_size);
+
+    cfbEncrypt(plaintext, block_size);
+    cfbDecrypt("Encrypted_text_block_1 Encrypted_text_block_2 ...", block_size);
+
+    return 0;
+}
