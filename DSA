@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Function to simulate DSA signature
+void dsaSignature(char* message) {
+    // Simulating the generation of 'k' for each signature
+    int k = rand(); // Generate a random 'k' value
+
+    printf("Message: %s\n", message);
+    printf("DSA Signature: [%d, %s]\n", k, message); // DSA signature includes 'k'
+}
+
+// Function to simulate RSA signature
+void rsaSignature(char* message) {
+    // RSA does not involve a random 'k'
+    printf("Message: %s\n", message);
+    printf("RSA Signature: [%s]\n", message); // RSA signature is deterministic
+}
+
+int main() {
+    char message[] = "Hello, world!";
+
+    printf("=== DSA Signature ===\n");
+    dsaSignature(message); // Generate DSA signature
+
+    printf("\n=== RSA Signature ===\n");
+    rsaSignature(message); // Generate RSA signature
+
+    return 0;
+}
